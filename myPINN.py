@@ -60,12 +60,16 @@ class pinn(tf.keras.Model):
         pt = tf.keras.layers.Lambda(lambda x: tf.concat(tf.split(x,num_or_size_splits=3,axis=1)[0:2],axis=1),dtype=tf.float64)(x)
         qt = tf.keras.layers.Lambda(lambda x: tf.concat([tf.split(x,num_or_size_splits=3,axis=1)[0],tf.split(x,num_or_size_splits=3,axis=1)[2]],axis=1))(x)
         H_q = dense_layer_2(qt)
+        for _ in range(self.depth-1):
+            H_q = tf.keras.layers.Dense(self.width, activation=self.activation, dtype=tf.float64)(H_q)
         H_q = out_dense_layer_2(H_q)
         H_q = tf.keras.layers.Lambda(lambda x: -x,dtype=tf.float64)(H_q)
         p = tf.keras.layers.Lambda(lambda x: tf.split(x,num_or_size_splits=2,axis=1)[1])(pt)
         q = tf.keras.layers.Lambda(lambda x: tf.split(x,num_or_size_splits=2,axis=1)[1])(qt)
         pp_t = add_layer_1([p, H_q])
         H_p = dense_layer_1(pp_t)
+        for _ in range(self.depth-1):
+            H_p = tf.keras.layers.Dense(self.width, activation=self.activation, dtype=tf.float64)(H_p)
         H_p = out_dense_layer_1(H_p)
         qq_t = add_layer_2([q, H_p])
         output = tf.keras.layers.concatenate([pp_t, qq_t], axis=1,dtype=tf.float64)

@@ -3,21 +3,21 @@ import os
 from analytic_solution import oscillator
 
 
-EPOCHS = 10000
+EPOCHS = 20000
 l = 0.0
 u = 1.
 k = 20.0
 m = 1.0
-collocation_points = 512
+collocation_points = 101
 t0 = 0.0
 x_0 = 0.0
 x0 = 1.0
 path = os.path.join(os.getcwd(), "model")
 width = 10
-depth = 2
+depth = 10
 input_dim = 3
 output_dim = 1
-activation = "linear"
+activation = 'tanh'
 optimizer = "Adam"
 learning_rate = 0.001
 random_seed = 123
